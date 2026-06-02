@@ -49,4 +49,36 @@ describe("summarise", () => {
       },
     });
   });
+
+  it("throws when two events have the same id", () => {
+    const events: Event[] = [
+      event({ id: "dup-1", type: "click", value: 20 }),
+      event({ id: "dup-1", type: "purchase", value: 100 }),
+    ];
+
+    expect(() => summarise(events)).toThrow(/duplicate id/i);
+  });
+
+  it("throws when an event is missing required fields", () => {
+    const events = [
+      {
+        id: "1",
+        type: "click",
+      },
+    ] as unknown as Event[];
+
+    expect(() => summarise(events)).toThrow(/invalid event/i);
+  });
+
+  it("throws when event timestamp is not a valid ISO string", () => {
+    const events: Event[] = [event({ id: "1", timestamp: "not-a-date" })];
+
+    expect(() => summarise(events)).toThrow(/invalid timestamp/i);
+  });
+
+  it("throws when event value is not a finite number", () => {
+    const events = [event({ id: "1", value: Number.NaN })];
+
+    expect(() => summarise(events)).toThrow(/invalid value/i);
+  });
 });
