@@ -20,7 +20,6 @@ async function main(): Promise<void> {
     throw new Error("Expected a JSON array of events");
   }
 
-  // TODO: validate each item
   const summary = summarise(parsed as Event[]);
 
   console.log(JSON.stringify(summary, null, 2));

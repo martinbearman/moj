@@ -2,9 +2,9 @@
 
 A small TypeScript service that ingests event data and returns an aggregated summary.
 
-## What it will do
+## What it does
 
-The initial version of this project will support:
+This project currently supports:
 
 - Reading a JSON array of events
 - Returning:
@@ -71,12 +71,15 @@ The test suite (`src/summarise.test.ts`) covers:
 - happy path aggregation for one type
 - multi-type aggregation
 - empty input edge case
-
+- duplicate `id` rejection
+- invalid event rejection (missing fields, invalid timestamp, invalid numeric value)
 
 ## Assumptions and decisions
 
-- Duplicate `id` handling is not implemented yet in code.
-- Validation for malformed events is intentionally minimal in the current iteration.
-- `value` is treated as numeric input from trusted JSON for now.
+- Duplicate `id` values are rejected with an error.
+- Events are validated during summarisation:
+  - required fields must exist and have correct types
+  - `timestamp` must be a valid date string
+  - `value` must be a finite number
 - Summary output groups by exact `type` string.
 
